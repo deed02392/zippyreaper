@@ -13,6 +13,7 @@ var zippyuri = 'http://www%server%.zippyshare.com/v/%key%/file.html';
 var zippylinks = [];
 var zippylink = '';
 
+// Find valid Zippyshare links, normalising so we can filter for unique links
 $.each(resultlinks, function(k, v)
 	{
 		var matches = [];
@@ -36,12 +37,15 @@ $.each(resultlinks, function(k, v)
 	}
 );
 
+// Download Zippyshare page and change links appearance depending on if dead or alive
 $.each(unique(zippylinks), function(k, zippysharelink)
 	{
 		$.get(
 			zippysharelink,
 			function(data) {
-				if(deadexp.test(data))
+                var dead = deadexp.test(data);
+                
+				if(dead)
 				{
 					// format dead link
 					$.each(resultlinks, function(k, pagelink)
@@ -61,11 +65,25 @@ $.each(unique(zippylinks), function(k, zippysharelink)
 						{
 							if(zippysharelink == pagelink.href)
 							{
+                                var size = "";
+                                $('.inner_main table div#lrbox font', data)
+                                    .each(function()
+                                    {
+                                        if($(this).html().match(/\d+\.\d+ MB/))
+                                            size = $(this).html();
+                                        // return false when we're done to stop looping
+                                        return size == "";
+                                    }
+                                );
+                                
 								tick = document.createElement('img');
 								tick.alt = 'Zippyshare link alive!';
 								tick.src = tickimg;
+                                sizeelem = document.createElement('span');
+                                sizeelem.innerHTML = size;
 								
 								pagelink.parentNode.insertBefore(tick, pagelink);
+                                pagelink.parentNode.insertBefore(sizeelem, pagelink);
 							}
 						}
 					);
