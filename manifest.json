@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "ZippyReaper",
+  "description": "Determine if a Zippyshare link is alive before clicking on it",
+  "version": "1.0",
+
+  "permissions": [
+    "activeTab"
+  ],
+  
+  "content_scripts": [
+	{
+	  "matches": ["<all_urls>"],
+	  "js": ["jquery.min.js", "zippyreaper.js"],
+	  "run_at": "document_end",
+	  "all_frames": true
+	}
+  ]
+}
