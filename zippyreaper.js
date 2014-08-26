@@ -6,6 +6,7 @@ var tickimg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9
 var zippylinkstd = /www(\d{1,3})\.zippyshare\.com\/view\.jsp\?locale=[A-Za-z]+&key=(\d+)/;
 var zippylinkshort = /www(\d{1,3})\.zippyshare\.com\/v\/(\d+)\/file\.html/;
 var deadexp = /File does not exist on this server/;
+var expiredexp = /File has expired and does not exist/;
 var zippyuri = 'http://www%server%.zippyshare.com/v/%key%/file.html';
 var zippylinks = [];
 var zippylink = '';
@@ -62,6 +63,7 @@ if (resultlinks.length) {
                 zippysharelink,
                 function(data) {
                     var dead = deadexp.test(data);
+                    var expired = expiredexp.test(data);
                     
                     if(dead)
                     {
@@ -75,6 +77,12 @@ if (resultlinks.length) {
                                 }
                             }
                         ); */
+                        $.each(matching_google_links, function(k, google_link) {
+                            $(this).remove();
+                        });
+                    }
+                    else if(expired)
+                    {
                         $.each(matching_google_links, function(k, google_link) {
                             $(this).remove();
                         });
@@ -103,7 +111,7 @@ if (resultlinks.length) {
                                 tick.alt = 'Zippyshare link alive!';
                                 tick.src = tickimg;
                                 sizeelem = document.createElement('span');
-                                sizeelem.innerHTML = size;
+                                sizeelem.innerHTML = size + "&nbsp;";
                                 
                                 $google_link_anchor.before(tick);
                                 $google_link_anchor.before(sizeelem);
@@ -131,9 +139,9 @@ if (resultlinks.length) {
 
 
 function compare(a,b) {
-  if (a.size > b.size)
-     return -1;
   if (a.size < b.size)
+     return -1;
+  if (a.size > b.size)
     return 1;
   return 0;
 }
