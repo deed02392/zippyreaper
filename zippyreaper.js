@@ -20,7 +20,7 @@ var resultlinks = $('a', googleresultlinks)
 		return this.href.match(/zippyshare/);
 	});
 
-if (resultlinks.length) {
+if (resultlinks.length > 0) {
     $.each(resultlinks, function(k, v)
         {
             var matches = [];
