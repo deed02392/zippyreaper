@@ -97,10 +97,10 @@ if (resultlinks.length) {
                                         return this.href == zippysharelink;
                                     });
                                 var size = "";
-                                $('.inner_main table div#lrbox font', data)
+                                $('.inner_main table div#lrbox div.left font', data)
                                     .each(function()
                                     {
-                                        if($(this).html().match(/\d+\.\d+ MB/))
+                                        if($(this).html().match(/\d+(?:\.\d)* MB/))
                                             size = $(this).html();
                                         // return false when we're done to stop looping
                                         return size == "";
@@ -156,5 +156,5 @@ function unique(array){
 
 function parse_size_mb(text) {
     numeric = text.slice(0, -3);
-    return parseFloat(numeric);
+    return Number(numeric);
 }
